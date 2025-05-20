@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+
+{% block title %}Our Services - Find-A-Spot{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-gradient-to-br from-white via-blue-50 to-blue-100 py-16 px-6">
+  <div class="max-w-7xl mx-auto">
+
+    <!-- Header -->
+    <div class="text-center mb-16">
+      <h1 class="text-4xl font-extrabold text-blue-800 mb-3">Our Smart Parking Services</h1>
+      <div class="w-20 h-1 bg-blue-500 mx-auto mb-4"></div>
+      <p class="text-lg text-gray-600">Simplifying urban mobility through innovation, convenience, and real-time technology</p>
+    </div>
+
+    <!-- Services Grid -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
+      
+      <!-- Service Card -->
+      <div class="group bg-white rounded-2xl shadow-md hover:shadow-xl transition p-6 border-t-4 border-blue-500 hover:-translate-y-1">
+        <div class="mb-4 flex items-center justify-center">
+          <i class="fas fa-map-marked-alt text-4xl text-blue-600 group-hover:text-blue-800 transition"></i>
+        </div>
+        <h3 class="text-xl font-bold text-gray-800 mb-2 text-center">Real-Time Slot Finder</h3>
+        <p class="text-gray-600 text-sm text-center">Instantly locate available parking slots nearby using live sensor data and TomTom Maps integration.</p>
+      </div>
+
+      <div class="group bg-white rounded-2xl shadow-md hover:shadow-xl transition p-6 border-t-4 border-green-500 hover:-translate-y-1">
+        <div class="mb-4 flex items-center justify-center">
+          <i class="fas fa-mobile-alt text-4xl text-green-600 group-hover:text-green-800 transition"></i>
+        </div>
+        <h3 class="text-xl font-bold text-gray-800 mb-2 text-center">Mobile Booking & Payments</h3>
+        <p class="text-gray-600 text-sm text-center">Book and pay for your parking spot in seconds via UPI, FASTag, or wallet – fully contactless and secure.</p>
+      </div>
+
+      <div class="group bg-white rounded-2xl shadow-md hover:shadow-xl transition p-6 border-t-4 border-amber-500 hover:-translate-y-1">
+        <div class="mb-4 flex items-center justify-center">
+          <i class="fas fa-shield-alt text-4xl text-yellow-500 group-hover:text-yellow-700 transition"></i>
+        </div>
+        <h3 class="text-xl font-bold text-gray-800 mb-2 text-center">Vehicle Safety & Monitoring</h3>
+        <p class="text-gray-600 text-sm text-center">Advanced entry/exit control, license plate recognition, and vehicle tracking to enhance safety at all spots.</p>
+      </div>
+
+      <div class="group bg-white rounded-2xl shadow-md hover:shadow-xl transition p-6 border-t-4 border-indigo-500 hover:-translate-y-1">
+        <div class="mb-4 flex items-center justify-center">
+          <i class="fas fa-bolt text-4xl text-indigo-600 group-hover:text-indigo-800 transition"></i>
+        </div>
+        <h3 class="text-xl font-bold text-gray-800 mb-2 text-center">EV Charging Integration</h3>
+        <p class="text-gray-600 text-sm text-center">Easily find and reserve parking lots with electric vehicle (EV) charging stations powered by smart meters.</p>
+      </div>
+
+      <div class="group bg-white rounded-2xl shadow-md hover:shadow-xl transition p-6 border-t-4 border-pink-500 hover:-translate-y-1">
+        <div class="mb-4 flex items-center justify-center">
+          <i class="fas fa-user-cog text-4xl text-pink-600 group-hover:text-pink-800 transition"></i>
+        </div>
+        <h3 class="text-xl font-bold text-gray-800 mb-2 text-center">Admin & Manager Dashboards</h3>
+        <p class="text-gray-600 text-sm text-center">Dedicated dashboards for administrators and parking managers for real-time operations and reporting.</p>
+      </div>
+
+      <div class="group bg-white rounded-2xl shadow-md hover:shadow-xl transition p-6 border-t-4 border-cyan-500 hover:-translate-y-1">
+        <div class="mb-4 flex items-center justify-center">
+          <i class="fas fa-envelope-open-text text-4xl text-cyan-600 group-hover:text-cyan-800 transition"></i>
+        </div>
+        <h3 class="text-xl font-bold text-gray-800 mb-2 text-center">Support & Feedback System</h3>
+        <p class="text-gray-600 text-sm text-center">Quick support via our feedback portal, email notifications, and a dedicated response system.</p>
+      </div>
+
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,21 @@
+
+  
+  .registerbox{
+    position: relative;
+    margin-top: 20px;
+  }
+  .gif-container { 
+    text-align: center;
+    margin-top: 50px;
+  }
+  .gif-image {
+    width: 350px; /* Adjust the width as needed */ 
+    height: auto; }
+    .video-container { 
+      text-align: center; 
+      margin-top: 10px; 
+    } 
+    .video { 
+      width: 600px; /* Adjust the width as needed */ 
+      height: auto; }
+    

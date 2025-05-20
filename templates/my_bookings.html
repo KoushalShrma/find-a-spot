@@ -1,0 +1,141 @@
+{% extends 'base.html' %}
+
+{% block title %}My Bookings - Find-A-Spot{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-gradient-to-br from-blue-50 to-cyan-50 py-12 px-4 sm:px-6 lg:px-8">
+  <div class="max-w-7xl mx-auto">
+    <!-- Header Section -->
+    <div class="text-center mb-12">
+      <h1 class="text-4xl font-bold text-gray-800 mb-3">Your Parking History</h1>
+      <div class="w-20 h-1 bg-blue-500 mx-auto"></div>
+      <p class="mt-4 text-lg text-gray-600">View and manage all your parking reservations</p>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+      <div class="bg-white p-6 rounded-xl shadow-sm border-t-4 border-blue-500">
+        <div class="flex items-center">
+          <div class="p-3 rounded-full bg-blue-100 text-blue-600 mr-4">
+            <i class="fas fa-calendar-check text-xl"></i>
+          </div>
+          <div>
+            <p class="text-sm font-medium text-gray-500">Total Bookings</p>
+            <p class="text-2xl font-semibold">{{ bookings|length }}</p>
+          </div>
+        </div>
+      </div>
+      
+      <div class="bg-white p-6 rounded-xl shadow-sm border-t-4 border-green-500">
+        <div class="flex items-center">
+          <div class="p-3 rounded-full bg-green-100 text-green-600 mr-4">
+            <i class="fas fa-rupee-sign text-xl"></i>
+          </div>
+          <div>
+            <p class="text-sm font-medium text-gray-500">Total Spent</p>
+            <p class="text-2xl font-semibold">₹{{ bookings|sum(attribute=6) }}</p>
+          </div>
+        </div>
+      </div>
+      
+      <div class="bg-white p-6 rounded-xl shadow-sm border-t-4 border-amber-500">
+        <div class="flex items-center">
+          <div class="p-3 rounded-full bg-amber-100 text-amber-600 mr-4">
+            <i class="fas fa-clock text-xl"></i>
+          </div>
+          <div>
+            <p class="text-sm font-medium text-gray-500">Upcoming</p>
+            <p class="text-2xl font-semibold">
+              {{ bookings|selectattr('5', 'equalto', 'confirmed')|list|count }}
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bookings Grid -->
+    {% if bookings %}
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {% for booking in bookings %}
+      <div class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">
+        <!-- Booking Header -->
+        <div class="bg-gradient-to-r from-blue-500 to-cyan-600 p-4 text-white">
+          <div class="flex justify-between items-center">
+            <h3 class="font-bold text-lg">#{{ booking[0] }}</h3>
+            <span class="px-2 py-1 text-xs rounded-full 
+              {% if booking[5] == 'cancelled' %}bg-red-100 text-red-800
+              {% elif booking[5] == 'completed' %}bg-green-100 text-green-800
+              {% else %}bg-blue-100 text-blue-800{% endif %}">
+              {{ booking[5]|upper }}
+            </span>
+          </div>
+          <p class="text-sm mt-1">{{ booking[1] }}</p>
+        </div>
+        
+        <!-- Booking Details -->
+        <div class="p-5">
+          <div class="space-y-3">
+            <div class="flex items-center">
+              <i class="fas fa-calendar-day text-gray-400 mr-3 w-5"></i>
+              <div>
+                <p class="text-xs text-gray-500">Date</p>
+                <p>{{ booking[2].strftime('%d %b %Y') }}</p>
+              </div>
+            </div>
+            
+            <div class="flex items-center">
+              <i class="fas fa-clock text-gray-400 mr-3 w-5"></i>
+              <div>
+                <p class="text-xs text-gray-500">Time Slot</p>
+                <p>{{ booking[2].strftime('%I:%M %p') }} - {{ booking[3].strftime('%I:%M %p') if booking[3] else '—' }}</p>
+              </div>
+            </div>
+            
+            <div class="flex items-center">
+              <i class="fas fa-car text-gray-400 mr-3 w-5"></i>
+              <div>
+                <p class="text-xs text-gray-500">Parking Slot</p>
+                <p>#{{ booking[4] }}</p>
+              </div>
+            </div>
+            
+            <div class="flex items-center">
+              <i class="fas fa-rupee-sign text-gray-400 mr-3 w-5"></i>
+              <div>
+                <p class="text-xs text-gray-500">Amount Paid</p>
+                <p class="font-semibold">₹{{ booking[6] }}</p>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Action Buttons -->
+          <div class="mt-6 pt-4 border-t border-gray-100 flex justify-end space-x-2">
+            <button class="px-3 py-1 bg-blue-50 text-blue-600 rounded-lg text-sm hover:bg-blue-100 transition">
+              <i class="fas fa-receipt mr-1"></i> Receipt
+            </button>
+            {% if booking[5] != 'cancelled' %}
+            <button class="px-3 py-1 bg-red-50 text-red-600 rounded-lg text-sm hover:bg-red-100 transition">
+              <i class="fas fa-times mr-1"></i> Cancel
+            </button>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    {% else %}
+    <!-- Empty State -->
+    <div class="bg-white rounded-xl shadow-sm p-12 text-center">
+      <div class="mx-auto w-24 h-24 bg-blue-50 rounded-full flex items-center justify-center mb-6">
+        <i class="fas fa-calendar-times text-3xl text-blue-400"></i>
+      </div>
+      <h3 class="text-xl font-medium text-gray-800 mb-2">No Bookings Found</h3>
+      <p class="text-gray-500 mb-6">You haven't made any bookings yet</p>
+      <a href="{{ url_for('book_slot') }}" class="inline-block bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg transition">
+        <i class="fas fa-plus mr-2"></i> Book a Slot
+      </a>
+    </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

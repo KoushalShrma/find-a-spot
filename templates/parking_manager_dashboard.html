@@ -1,0 +1,238 @@
+{% extends 'base.html' %}
+
+{% block title %}Manager Dashboard - Find-A-Spot{% endblock %}
+
+{% block content %}
+<div class="max-w-6xl mx-auto mt-16 mb-24 px-4">
+
+  <!-- Welcome Header with Stats -->
+  <section class="bg-white rounded-xl shadow-lg p-8 mb-12">
+    <div class="flex flex-col md:flex-row justify-between items-center">
+      <div class="text-center md:text-left mb-6 md:mb-0">
+        <h2 class="text-4xl font-extrabold text-blue-700 mb-2">Welcome Back, Manager</h2>
+        <p class="text-gray-700 text-lg">Here's your daily overview</p>
+      </div>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div class="bg-blue-50 p-4 rounded-lg text-center">
+          <p class="text-2xl font-bold text-blue-600">142</p>
+          <p class="text-sm text-gray-600">Active Bookings</p>
+        </div>
+        <div class="bg-green-50 p-4 rounded-lg text-center">
+          <p class="text-2xl font-bold text-green-600">87%</p>
+          <p class="text-sm text-gray-600">Occupancy</p>
+        </div>
+        <div class="bg-yellow-50 p-4 rounded-lg text-center">
+          <p class="text-2xl font-bold text-yellow-600">₹24,850</p>
+          <p class="text-sm text-gray-600">Today's Revenue</p>
+        </div>
+        <div class="bg-purple-50 p-4 rounded-lg text-center">
+          <p class="text-2xl font-bold text-purple-600">12</p>
+          <p class="text-sm text-gray-600">Pending Requests</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Main Dashboard Grid -->
+  <section class="grid grid-cols-1 md:grid-cols-3 gap-8">
+
+    <!-- real time parking info -->
+    <div class="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition cursor-pointer group">
+      <div class="flex items-center space-x-4 mb-4">
+        <div class="bg-blue-100 text-blue-600 rounded-full p-3 group-hover:bg-blue-600 group-hover:text-white transition">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+          </svg>
+        </div>
+        <h3 class="text-xl font-semibold">Real Time Parking Info</h3>
+      </div>
+      <p class="text-gray-600 mb-6">View and manage all parking lot under your supervision.</p>
+      <a href="{{ url_for('view_parking_lots') }}" class="inline-flex items-center px-5 py-2 bg-blue-600 text-white rounded-full font-semibold hover:bg-blue-700 transition">
+        View Parking
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+        </svg>
+      </a>
+    </div>
+
+    <!-- car entry -->
+    <div class="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition cursor-pointer group">
+      <div class="flex items-center space-x-4 mb-4">
+        <div class="bg-teal-100 text-teal-600 rounded-full p-3 group-hover:bg-teal-600 group-hover:text-white transition">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+          </svg>
+        </div>
+        <h3 class="text-xl font-semibold">Add Car Entry Manually</h3>
+      </div>
+      <p class="text-gray-600 mb-6">Add new car in the parking lot if automated system did not worked.</p>
+      <a href="{{ url_for('add_car') }}" class="inline-flex items-center px-5 py-2 bg-teal-600 text-white rounded-full font-semibold hover:bg-teal-700 transition">
+        Add Car
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+        </svg>
+      </a>
+    </div>
+
+    <!-- Real-time Analytics -->
+    <div class="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition cursor-pointer group">
+      <div class="flex items-center space-x-4 mb-4">
+        <div class="bg-purple-100 text-purple-600 rounded-full p-3 group-hover:bg-purple-600 group-hover:text-white transition">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+          </svg>
+        </div>
+        <h3 class="text-xl font-semibold">Parking Analytics</h3>
+      </div>
+      <p class="text-gray-600 mb-6">View real-time occupancy rates and revenue analytics.</p>
+      <a href="{{ url_for('parking_manager_dashboard') }}" class="inline-flex items-center px-5 py-2 bg-purple-600 text-white rounded-full font-semibold hover:bg-purple-700 transition">
+        View Analytics
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+        </svg>
+      </a>
+    </div>
+
+    <!-- Payment History -->
+    <div class="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition cursor-pointer group">
+      <div class="flex items-center space-x-4 mb-4">
+        <div class="bg-green-100 text-green-600 rounded-full p-3 group-hover:bg-green-600 group-hover:text-white transition">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+        </div>
+        <h3 class="text-xl font-semibold">Payment History</h3>
+      </div>
+      <p class="text-gray-600 mb-6">Track all transactions and generate financial reports.</p>
+      <a href="{{ url_for('parking_manager_dashboard') }}" class="inline-flex items-center px-5 py-2 bg-green-600 text-white rounded-full font-semibold hover:bg-green-700 transition">
+        View Payments
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+        </svg>
+      </a>
+    </div>
+
+    <!-- exit car -->
+    <div class="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition cursor-pointer group">
+      <div class="flex items-center space-x-4 mb-4">
+        <div class="bg-yellow-100 text-yellow-600 rounded-full p-3 group-hover:bg-yellow-600 group-hover:text-white transition">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+          </svg>
+        </div>
+        <h3 class="text-xl font-semibold">Exit Car Manually</h3>
+      </div>
+      <p class="text-gray-600 mb-6">Exit car from the parking lot if automated system did not worked.</p>
+      <a href="{{ url_for('parking_manager_dashboard') }}" class="inline-flex items-center px-5 py-2 bg-yellow-600 text-white rounded-full font-semibold hover:bg-yellow-700 transition">
+        Exit Car
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+        </svg>
+      </a>
+    </div>
+
+    <!-- Profile Settings -->
+    <div class="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition cursor-pointer group">
+      <div class="flex items-center space-x-4 mb-4">
+        <div class="bg-red-100 text-red-600 rounded-full p-3 group-hover:bg-red-600 group-hover:text-white transition">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+          </svg>
+        </div>
+        <h3 class="text-xl font-semibold">Account Settings</h3>
+      </div>
+      <p class="text-gray-600 mb-6">Update your profile, password, and notification preferences.</p>
+      <a href="{{ url_for('parking_manager_dashboard') }}" class="inline-flex items-center px-5 py-2 bg-red-600 text-white rounded-full font-semibold hover:bg-red-700 transition">
+        Edit Profile
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+        </svg>
+      </a>
+    </div>
+
+  </section>
+
+  <!-- Recent Activity Section -->
+  <section class="bg-white rounded-xl shadow-lg p-8 mt-12">
+    <h3 class="text-2xl font-bold text-gray-800 mb-6 flex items-center">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+      </svg>
+      Recent Activity
+    </h3>
+    <div class="space-y-4">
+      <div class="flex items-start pb-4 border-b border-gray-100">
+        <div class="bg-green-100 p-2 rounded-full mr-4">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+          </svg>
+        </div>
+        <div>
+          <p class="font-medium">New booking confirmed</p>
+          <p class="text-sm text-gray-500">Slot #B-12 reserved by Ramesh Patel for 2 hours</p>
+          <p class="text-xs text-gray-400 mt-1">10 minutes ago</p>
+        </div>
+      </div>
+      <div class="flex items-start pb-4 border-b border-gray-100">
+        <div class="bg-blue-100 p-2 rounded-full mr-4">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+        </div>
+        <div>
+          <p class="font-medium">Parking extension</p>
+          <p class="text-sm text-gray-500">Vehicle #MP09AB1234 extended stay by 1 hour</p>
+          <p class="text-xs text-gray-400 mt-1">45 minutes ago</p>
+        </div>
+      </div>
+      <div class="flex items-start">
+        <div class="bg-purple-100 p-2 rounded-full mr-4">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-purple-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
+          </svg>
+        </div>
+        <div>
+          <p class="font-medium">Payment received</p>
+          <p class="text-sm text-gray-500">₹150 received for booking #2847 (UPI transaction)</p>
+          <p class="text-xs text-gray-400 mt-1">2 hours ago</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-gray-100 py-10 border-t border-gray-300 mt-24">
+    <div class="max-w-6xl mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-8 text-center md:text-left">
+      <div>
+        <h4 class="text-xl font-semibold text-blue-700 mb-3">Find-A-Spot</h4>
+        <p class="text-gray-600 text-sm">
+          Smart parking solutions for modern cities. Manage, monitor, and optimize your parking operations.
+        </p>
+      </div>
+  
+      <div>
+        <h4 class="text-xl font-semibold text-blue-700 mb-3">Quick Actions</h4>
+        <ul class="space-y-2 text-sm text-gray-700">
+          <li><a href="{{ url_for('add_parking') }}" class="hover:text-blue-500 transition">Add New Parking Lot</a></li>
+          <li><a href="{{ url_for('parking_manager_dashboard') }}" class="hover:text-blue-500 transition">View Today's Reports</a></li>
+          <li><a href="{{ url_for('logout') }}" class="hover:text-blue-500 transition">Logout</a></li>
+        </ul>
+      </div>
+  
+      <div>
+        <h4 class="text-xl font-semibold text-blue-700 mb-3">Support</h4>
+        <p class="text-sm text-gray-700">📧 managers@findaspot.in</p>
+        <p class="text-sm text-gray-700">📞 +91 98765 43210</p>
+        <p class="text-sm text-gray-700 mt-2">24/7 manager support available</p>
+      </div>
+    </div>
+  
+    <div class="text-center text-sm text-gray-500 mt-8">
+      © {{ 2025 }} Find-A-Spot Manager Portal. All rights reserved.
+    </div>
+  </footer>
+
+</div>
+{% endblock %}

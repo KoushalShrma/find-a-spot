@@ -1,0 +1,173 @@
+{% extends 'base.html' %}
+
+{% block title %}Book Parking Slot - Find-A-Spot{% endblock %}
+
+{% block content %}
+<div class="max-w-6xl mx-auto mt-16 mb-24 px-4">
+
+  <h1 class="text-4xl font-extrabold text-blue-700 mb-4 text-center">
+    Book Your Parking Slot Effortlessly
+  </h1>
+
+  <p class="text-center text-gray-700 max-w-3xl mx-auto mb-8 text-lg leading-relaxed">
+    Finding a safe and convenient parking space has never been easier. Use the map below to search your preferred location,
+    explore nearby parking lots, and reserve your spot instantly. Save time and avoid the hassle of searching for parking on the go.
+  </p>
+
+  <section class="mb-12 bg-blue-50 rounded-lg p-6 shadow-md">
+    <h2 class="text-2xl font-semibold text-blue-800 mb-4 text-center">How It Works</h2>
+    <ul class="list-disc list-inside text-gray-700 max-w-4xl mx-auto space-y-2 text-lg">
+      <li>Search for your desired city, area, or landmark using the search bar.</li>
+      <li>Drag the marker on the map to fine-tune your exact location.</li>
+      <li>Browse the list of available parking spots nearby, including details and distances.</li>
+      <li>Click “Select” to pick a parking spot and proceed with your booking.</li>
+      <li>Enjoy a seamless parking experience with real-time availability updates.</li>
+    </ul>
+  </section>
+
+  <p class="text-center text-gray-600 max-w-3xl mx-auto italic mb-8">
+    "Smart parking solutions designed to give you peace of mind wherever you go."
+  </p>
+
+  <div class="bg-white rounded-xl shadow-lg p-6">
+
+    <!-- Search Bar -->
+    <div class="flex flex-col md:flex-row gap-4 mb-6">
+      <input
+        id="search-input"
+        type="text"
+        placeholder="Enter city, area or landmark..."
+        aria-label="Search location"
+        class="flex-grow border border-gray-300 rounded-md px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent"
+      />
+      <button
+        id="search-button"
+        class="bg-blue-600 text-white rounded-md px-6 py-3 font-semibold hover:bg-blue-700 transition"
+      >
+        Search
+      </button>
+    </div>
+
+    <!-- Map -->
+    <div id="map" class="w-full h-[60vh] rounded-md shadow-md mb-6"></div>
+
+    <!-- Search Results -->
+    <div
+      id="results-container"
+      class="max-h-72 overflow-y-auto space-y-4 scrollbar-thin scrollbar-thumb-blue-400 scrollbar-track-gray-100"
+      aria-live="polite" aria-relevant="additions"
+    >
+      <!-- Parking results will appear here -->
+    </div>
+  </div>
+</div>
+
+<script src="https://api.tomtom.com/maps-sdk-for-web/cdn/6.x/6.18.0/maps/maps-web.min.js"></script>
+<link
+  rel="stylesheet"
+  href="https://api.tomtom.com/maps-sdk-for-web/cdn/6.x/6.18.0/maps/maps.css"
+/>
+
+<script>
+  const apiKey = "zZkfJzljnxKUblNDmC02CnZy7Mi7gNYO";
+
+  const map = tt.map({
+    key: apiKey,
+    container: "map",
+    center: [75.94298, 22.821053],
+    zoom: 12,
+  });
+
+  map.addControl(new tt.NavigationControl());
+
+  let userLocation = { lat: 22.821053, lng: 75.94298 };
+
+  const marker = new tt.Marker({
+    draggable: true,
+  })
+    .setLngLat([userLocation.lng, userLocation.lat])
+    .addTo(map);
+
+  const fetchNearbyParking = async (lat, lng) => {
+    userLocation = { lat, lng };
+    const url = `https://api.tomtom.com/search/2/categorySearch/parking.json?key=${apiKey}&lat=${lat}&lon=${lng}&radius=5000`;
+    const response = await fetch(url);
+    const data = await response.json();
+    const resultsContainer = document.getElementById("results-container");
+    resultsContainer.innerHTML = "";
+
+    if (data.results && data.results.length > 0) {
+      data.results.forEach((place) => {
+        const distance = calculateDistance(lat, lng, place.position.lat, place.position.lon);
+        const resultDiv = document.createElement("div");
+        resultDiv.className = "bg-blue-50 p-4 rounded-lg shadow flex justify-between items-center text-blue-900 font-semibold";
+        resultDiv.innerHTML = `
+          <div>
+            <strong>${place.poi.name || "Unnamed Parking"}</strong><br>
+            <span class="text-sm text-blue-700">Address: ${place.address.freeformAddress || "N/A"}</span><br>
+            <span class="text-sm text-blue-700">Distance: ${distance.toFixed(2)} km</span>
+          </div>
+          <button
+            class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md font-semibold transition"
+            onclick="selectParking('${place.poi.name || "Unnamed Parking"}', '${place.address.freeformAddress || "N/A"}')"
+          >
+            Select
+          </button>
+        `;
+        resultsContainer.appendChild(resultDiv);
+      });
+    } else {
+      resultsContainer.innerHTML = `<p class="text-center text-gray-500">No parking options found nearby.</p>`;
+    }
+  };
+
+  const calculateDistance = (lat1, lon1, lat2, lon2) => {
+    const R = 6371;
+    const dLat = ((lat2 - lat1) * Math.PI) / 180;
+    const dLon = ((lon2 - lon1) * Math.PI) / 180;
+    const a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos((lat1 * Math.PI) / 180) *
+        Math.cos((lat2 * Math.PI) / 180) *
+        Math.sin(dLon / 2) *
+        Math.sin(dLon / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    return R * c;
+  };
+
+  document.getElementById("search-button").addEventListener("click", async () => {
+    const query = document.getElementById("search-input").value;
+    if (query.trim() === "") {
+      alert("Please enter a location to search.");
+      return;
+    }
+
+    const url = `https://api.tomtom.com/search/2/geocode/${encodeURIComponent(query)}.json?key=${apiKey}`;
+    const response = await fetch(url);
+    const data = await response.json();
+
+    if (data.results && data.results.length > 0) {
+      const location = data.results[0].position;
+      map.flyTo({ center: [location.lon, location.lat], zoom: 14 });
+      marker.setLngLat([location.lon, location.lat]);
+      await fetchNearbyParking(location.lat, location.lon);
+    } else {
+      alert("Location not found. Please try again.");
+    }
+  });
+
+  marker.on("dragend", async () => {
+    const lngLat = marker.getLngLat();
+    await fetchNearbyParking(lngLat.lat, lngLat.lng);
+  });
+
+  function selectParking(name, address) {
+  const url = `/confirm_slot?name=${encodeURIComponent(name)}&address=${encodeURIComponent(address)}`;
+  window.location.href = url;
+}
+
+
+  // Initial fetch for default location
+  fetchNearbyParking(userLocation.lat, userLocation.lng);
+</script>
+{% endblock %}

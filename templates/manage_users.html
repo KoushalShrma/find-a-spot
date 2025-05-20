@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+
+{% block title %}Manage Users - Find-A-Spot{% endblock %}
+
+{% block content %}
+<div class="container my-16">
+  <h1 class="text-4xl font-extrabold text-center text-blue-700 mb-10">Manage All Registered Users</h1>
+
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6" style="grid-auto-rows: 1fr">
+    {% for user in users %}
+    <div class="bg-white p-6 rounded-xl shadow-lg border-l-4 border-blue-500 hover:border-indigo-600 flex flex-col h-full">
+      
+      <div class="mb-3 flex-grow">
+        <h2 class="text-xl font-semibold text-blue-800 truncate">{{ user[2] }}</h2>
+        <p class="text-sm text-gray-600 truncate">{{ user[3] }}</p>
+        <p class="text-xs text-gray-500 mt-1">{{ user[1]|capitalize }} | Verified: {{ 'Yes' if user[4] else 'No' }}</p>
+      </div>
+
+      {% set user_id = user[0] %}
+
+      <!-- Profile Section -->
+      <div class="mb-3 flex-grow-0">
+        {% for profile in profiles %}
+          {% if profile[1] == user_id %}
+          <div class="text-sm text-gray-700 space-y-1">
+            <p class="truncate"><strong>📞</strong> {{ profile[3] or 'Not provided' }}</p>
+            <p class="truncate"><strong>🚗</strong> {{ profile[4] or 'Not provided' }}</p>
+            <p class="truncate"><strong>🏠</strong> {{ (profile[7] or '')[:20] }}{% if profile[7] and profile[7]|length > 20 %}...{% endif %}</p>
+          </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+
+      <!-- Bookings & Payments Container -->
+      <div class="mb-4 flex-grow">
+        <!-- Bookings -->
+        <div class="text-xs text-gray-600 mb-2">
+          <strong class="text-yellow-600">Bookings:</strong>
+          {% set user_bookings = [] %}
+          {% for booking in bookings %}
+            {% if booking[1] == user_id %}
+              {% set _ = user_bookings.append(booking) %}
+              <p class="truncate">📌 {{ booking[2] }} | Slot {{ booking[4] }}</p>
+            {% endif %}
+          {% endfor %}
+          {% if user_bookings|length == 0 %}
+            <p class="text-gray-400">No bookings</p>
+          {% endif %}
+        </div>
+
+        <!-- Payments -->
+        <div class="text-xs text-gray-600">
+          <strong class="text-purple-600">Payments:</strong>
+          {% set user_payments = [] %}
+          {% for payment in payments %}
+            {% if payment[1] == user_id %}
+              {% set _ = user_payments.append(payment) %}
+              <p class="truncate">₹{{ payment[3] }} - {{ payment[4] }} - {{ payment[5] }}</p>
+            {% endif %}
+          {% endfor %}
+          {% if user_payments|length == 0 %}
+            <p class="text-gray-400">No payments</p>
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- Delete Button -->
+      <form action="{{ url_for('delete_user', user_id=user_id) }}" method="POST" class="mt-auto">
+        <button class="w-full bg-red-600 text-white py-2 rounded-md hover:bg-red-700 text-sm font-semibold transition">
+          Delete User
+        </button>
+      </form>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

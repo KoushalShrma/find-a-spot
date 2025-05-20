@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+
+{% block title %}Live Parking Details - Find-A-Spot{% endblock %}
+
+{% block content %}
+<div class="container my-16">
+  <h1 class="text-4xl font-extrabold text-center text-blue-700 mb-8">Live Parking Slot Details</h1>
+
+  <div class="flex justify-center mb-10">
+    <div class="relative w-full max-w-md">
+      <label for="parkingSelect" class="block text-lg font-medium text-gray-700 mb-2">Choose Parking Lot</label>
+      <select id="parkingSelect" class="block w-full bg-white border border-gray-300 rounded-xl px-4 py-3 shadow-md focus:ring-blue-500 focus:border-blue-500 transition">
+        <option disabled selected value="">-- Select a Parking Lot --</option>
+        {% for lot in parking_lots %}
+          <option value="{{ lot.parking_id }}">{{ lot.Name }} - {{ lot.Address }}</option>
+        {% endfor %}
+      </select>
+    </div>
+  </div>
+
+  <div id="slotsContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <!-- Slot details will appear here -->
+  </div>
+</div>
+
+<script>
+  const select = document.getElementById('parkingSelect');
+  const container = document.getElementById('slotsContainer');
+
+  select.addEventListener('change', async () => {
+    const id = select.value;
+    container.innerHTML = '<div class="text-center col-span-3 text-gray-600">Loading slot data...</div>';
+
+    try {
+      const res = await fetch(`/api/live_parking_info?parking_id=${id}`);
+      const data = await res.json();
+      container.innerHTML = '';
+
+      if (!data.slots || data.slots.length === 0) {
+        container.innerHTML = '<div class="text-center col-span-3 text-gray-500">No slot data available.</div>';
+        return;
+      }
+
+      for (let slot of data.slots) {
+        const card = document.createElement('div');
+        card.className = `bg-white p-6 rounded-xl shadow-lg border-l-4 transition-all duration-300 ${slot.is_occupied ? 'border-red-500' : 'border-green-500'}`;
+        card.innerHTML = `
+          <div class="mb-2 flex items-center justify-between">
+            <h3 class="text-xl font-semibold text-gray-800">Slot ${slot.slot_no}</h3>
+            ${slot.is_occupied ? '<span class="text-red-600 font-bold">Occupied</span>' : '<span class="text-green-600 font-bold">Available</span>'}
+          </div>
+          <div class="text-gray-600 text-sm">
+            ${slot.is_occupied ? `
+              <p><strong>Vehicle No:</strong> ${slot.vehicle_no || 'N/A'}</p>
+              <p><strong>Entry Time:</strong> ${slot.entry_time || 'N/A'}</p>
+              <p><strong>Exit Time:</strong> ${slot.exit_time || '—'}</p>
+            ` : '<p>This slot is currently free.</p>'}
+          </div>
+        `;
+        container.appendChild(card);
+      }
+    } catch (err) {
+      container.innerHTML = '<div class="text-red-600 text-center col-span-3">Failed to load data.</div>';
+    }
+  });
+</script>
+{% endblock %}

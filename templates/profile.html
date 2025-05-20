@@ -1,0 +1,107 @@
+{% extends 'base.html' %}
+
+{% block title %}My Profile - Find-A-Spot{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-12 px-4 sm:px-6 lg:px-8">
+  <div class="max-w-4xl mx-auto">
+    <div class="bg-white rounded-3xl shadow-xl overflow-hidden">
+      <!-- Profile Header -->
+      <div class="bg-indigo-600 py-8 px-10 text-center">
+        <h1 class="text-3xl font-bold text-white">Personal Information</h1>
+        <p class="mt-2 text-indigo-100">All fields are required</p>
+      </div>
+
+      <!-- Profile Content -->
+      <div class="p-8">
+        <!-- Photo Section -->
+        <div class="flex flex-col items-center mb-8">
+          <div class="relative group">
+            <img src="{{ profile[5] or url_for('static', filename='default-avatar.jpg') }}" 
+                 class="w-48 h-48 rounded-full object-cover border-4 border-white shadow-lg">
+            <button class="absolute bottom-0 right-0 bg-indigo-500 text-white p-2 rounded-full hover:bg-indigo-600 transition-all transform group-hover:scale-110">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M4 5a2 2 0 00-2 2v8a2 2 0 002 2h12a2 2 0 002-2V7a2 2 0 00-2-2h-1.586a1 1 0 01-.707-.293l-1.121-1.121A2 2 0 0011.172 3H8.828a2 2 0 00-1.414.586L6.293 4.707A1 1 0 015.586 5H4zm6 9a3 3 0 100-6 3 3 0 000 6z" clip-rule="evenodd" />
+              </svg>
+            </button>
+          </div>
+          <span class="mt-2 text-sm text-gray-500">Change Photo</span>
+        </div>
+
+        <!-- Profile Form -->
+        <form id="profileForm" method="POST" class="space-y-6">
+          <!-- Name and Phone Row -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
+              <input type="text" name="name" value="{{ profile[0] }}" 
+                     class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all" required>
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Phone Number</label>
+              <input type="tel" name="phone_no" value="{{ profile[1] }}" 
+                     class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all" required>
+            </div>
+          </div>
+
+          <!-- Vehicle and Age Row -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Vehicle Number</label>
+              <input type="text" name="vehicle_no" value="{{ profile[2] }}" 
+                     class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all uppercase" required>
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Age</label>
+              <input type="number" name="age" value="{{ profile[3] }}" min="18" max="100" 
+                     class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all" required>
+            </div>
+          </div>
+
+          <!-- Address -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Address</label>
+            <textarea name="address" rows="3" 
+                      class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all" required>{{ profile[4] }}</textarea>
+          </div>
+
+          <!-- Action Buttons -->
+          <div class="flex justify-end space-x-4 pt-6">
+            <button type="button" id="editBtn" 
+                    class="px-6 py-3 bg-indigo-600 text-white font-medium rounded-lg hover:bg-indigo-700 transition-all shadow-md flex items-center">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
+              </svg>
+              Edit Profile
+            </button>
+            <button type="submit" id="saveBtn" style="display: none;" 
+                    class="px-6 py-3 bg-green-600 text-white font-medium rounded-lg hover:bg-green-700 transition-all shadow-md flex items-center">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+              </svg>
+              Save Changes
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Toggle between view and edit modes
+  const editBtn = document.getElementById('editBtn');
+  const saveBtn = document.getElementById('saveBtn');
+  const formInputs = document.querySelectorAll('#profileForm input, #profileForm textarea');
+
+  editBtn.addEventListener('click', () => {
+    formInputs.forEach(input => {
+      input.readOnly = false;
+      input.classList.add('bg-white');
+      input.classList.remove('bg-gray-100');
+    });
+    editBtn.style.display = 'none';
+    saveBtn.style.display = 'flex';
+  });
+</script>
+{% endblock %}

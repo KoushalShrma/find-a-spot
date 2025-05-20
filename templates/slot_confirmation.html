@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ParkEase - Smart Parking Solutions</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .parking-slot {
+            transition: all 0.3s ease;
+        }
+
+        .parking-slot:hover {
+            transform: scale(1.05);
+        }
+
+        .parking-slot.available {
+            background-color: #d1fae5;
+        }
+
+        .parking-slot.booked {
+            background-color: #fee2e2;
+        }
+
+        .parking-slot.selected {
+            background-color: #bfdbfe;
+            box-shadow: 0 0 0 3px #3b82f6;
+        }
+
+        .slide-fade-enter-active {
+            transition: all 0.3s ease-out;
+        }
+
+        .slide-fade-leave-active {
+            transition: all 0.3s cubic-bezier(1, 0.5, 0.8, 1);
+        }
+
+        .slide-fade-enter-from,
+        .slide-fade-leave-to {
+            transform: translateX(20px);
+            opacity: 0;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50">
+    <!-- Header -->
+    <header class="bg-blue-600 text-white shadow-lg">
+        <div class="container mx-auto px-4 py-6">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center space-x-2">
+                    <i class="fas fa-parking text-3xl"></i>
+                    <h1 class="text-2xl font-bold">Find-A-Spot</h1>
+                </div>
+                <nav class="hidden md:flex space-x-6">
+                    <a href="#" class="hover:text-blue-200">Home</a>
+                    <a href="#" class="hover:text-blue-200">Parking Locations</a>
+                    <a href="#" class="hover:text-blue-200">Pricing</a>
+                    <a href="#" class="hover:text-blue-200">Contact</a>
+                </nav>
+                <div class="flex items-center space-x-4">
+                    
+                    <button class="md:hidden text-2xl">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="bg-gradient-to-r from-blue-500 to-blue-700 text-white py-16">
+        <div class="container mx-auto px-4 text-center">
+            <h1 class="text-4xl md:text-5xl font-bold mb-6">Find & Book Parking Spaces Easily</h1>
+            <p class="text-xl mb-8 max-w-2xl mx-auto">Reserve your parking spot in advance or find available spaces in
+                real-time for commercial and private parking lots.</p>
+
+            <!--  -->
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-12">
+        <div class="flex flex-col lg:flex-row gap-8">
+            <!-- Parking Map Section -->
+            <div class="lg:w-2/3">
+                <div class="bg-white rounded-xl shadow-md p-6 mb-8">
+                    <div class="flex justify-between items-center mb-6">
+                        <h1 class="text-3xl font-bold text-blue-700 mb-4">{{ parking_name }}</h1>
+                        <p class="text-gray-600">{{ parking_address }}</p>
+
+                        <div class="flex items-center space-x-2">
+                            <span class="text-sm text-gray-600">Last updated: <span id="lastUpdated">Just
+                                    now</span></span>
+                            <button class="text-blue-600 hover:text-blue-800">
+                                <i class="fas fa-sync-alt"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="mb-6">
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            <div class="flex items-center">
+                                <div class="w-4 h-4 bg-green-200 rounded mr-2"></div>
+                                <span class="text-sm">Available</span>
+                            </div>
+                            <div class="flex items-center">
+                                <div class="w-4 h-4 bg-red-200 rounded mr-2"></div>
+                                <span class="text-sm">Booked</span>
+                            </div>
+                            <div class="flex items-center">
+                                <div class="w-4 h-4 bg-blue-200 rounded mr-2"></div>
+                                <span class="text-sm">Selected</span>
+                            </div>
+                            <div class="flex items-center">
+                                <div class="w-4 h-4 bg-yellow-200 rounded mr-2"></div>
+                                <span class="text-sm">Premium</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Parking Lot Visualization -->
+                    <div class="bg-gray-100 p-6 rounded-lg">
+                        <div class="grid grid-cols-5 gap-4 mb-4">
+                            <div class="col-span-5 bg-gray-300 h-12 rounded flex items-center justify-center font-bold">
+                                ENTRANCE
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-5 gap-4">
+                            <!-- Row 1 -->
+                            <div class="parking-slot available col-span-1 p-4 rounded-lg border border-gray-300 text-center cursor-pointer"
+                                data-slot="A1" data-type="standard">
+                                <div class="font-bold">A1</div>
+                                <div class="text-xs">Standard</div>
+                                <div class="text-green-600 text-sm mt-1">Available</div>
+                            </div>
+                            <div class="parking-slot available col-span-1 p-4 rounded-lg border border-gray-300 text-center cursor-pointer"
+                                data-slot="A2" data-type="standard">
+                                <div class="font-bold">A2</div>
+                                <div class="text-xs">Standard</div>
+                                <div class="text-green-600 text-sm mt-1">Available</div>
+                            </div>
+                            <div class="parking-slot booked col-span-1 p-4 rounded-lg border border-gray-300 text-center cursor-not-allowed"
+                                data-slot="A3" data-type="standard">
+                                <div class="font-bold">A3</div>
+                                <div class="text-xs">Standard</div>
+                                <div class="text-red-600 text-sm mt-1">Booked</div>
+                            </div>
+                            <div class="parking-slot available col-span-1 p-4 rounded-lg border border-gray-300 text-center cursor-pointer"
+                                data-slot="A4" data-type="premium">
+                                <div class="font-bold">A4</div>
+                                <div class="text-xs">Premium</div>
+                                <div class="text-green-600 text-sm mt-1">Available</div>
+                            </div>
+                            <div class="parking-slot booked col-span-1 p-4 rounded-lg border border-gray-300 text-center cursor-not-allowed"
+                                data-slot="A5" data-type="premium">
+                                <div class="font-bold">A5</div>
+                                <div class="text-xs">Premium</div>
+                                <div class="text-red-600 text-sm mt-1">Booked</div>
+                            </div>
+
+                            <!-- Row 2 -->
+                            <div class="parking-slot available col-span-1 p-4 rounded-lg border border-gray-300 text-center cursor-pointer"
+                                data-slot="B1" data-type="standard">
+                                <div class="font-bold">B1</div>
+                                <div class="text-xs">Standard</div>
+                                <div class="text-green-600 text-sm mt-1">Available</div>
+                            </div>
+                            <div class="parking-slot booked col-span-1 p-4 rounded-lg border border-gray-300 text-center cursor-not-allowed"
+                                data-slot="B2" data-type="standard">
+                                <div class="font-bold">B2</div>
+                                <div class="text-xs">Standard</div>
+                                <div class="text-red-600 text-sm mt-1">Booked</div>
+                            </div>
+                            <div class="parking-slot available col-span-1 p-4 rounded-lg border border-gray-300 text-center cursor-pointer"
+                                data-slot="B3" data-type="standard">
+                                <div class="font-bold">B3</div>
+                                <div class="text-xs">Standard</div>
+                                <div class="text-green-600 text-sm mt-1">Available</div>
+                            </div>
+                            <div class="parking-slot available col-span-1 p-4 rounded-lg border border-gray-300 text-center cursor-pointer"
+                                data-slot="B4" data-type="premium">
+                                <div class="font-bold">B4</div>
+                                <div class="text-xs">Premium</div>
+                                <div class="text-green-600 text-sm mt-1">Available</div>
+                            </div>
+                            <div class="parking-slot available col-span-1 p-4 rounded-lg border border-gray-300 text-center cursor-pointer"
+                                data-slot="B5" data-type="premium">
+                                <div class="font-bold">B5</div>
+                                <div class="text-xs">Premium</div>
+                                <div class="text-green-600 text-sm mt-1">Available</div>
+                            </div>
+
+                            <!-- Row 3 -->
+                            <div class="col-span-5 bg-gray-300 h-12 rounded flex items-center justify-center font-bold">
+                                ELEVATOR
+                            </div>
+
+                            <!-- Row 4 -->
+                            <div class="parking-slot available col-span-1 p-4 rounded-lg border border-gray-300 text-center cursor-pointer"
+                                data-slot="C1" data-type="disabled">
+                                <div class="font-bold">C1</div>
+                                <div class="text-xs">Disabled</div>
+                                <div class="text-green-600 text-sm mt-1">Available</div>
+                            </div>
+                            <div class="parking-slot booked col-span-1 p-4 rounded-lg border border-gray-300 text-center cursor-not-allowed"
+                                data-slot="C2" data-type="disabled">
+                                <div class="font-bold">C2</div>
+                                <div class="text-xs">Disabled</div>
+                                <div class="text-red-600 text-sm mt-1">Booked</div>
+                            </div>
+                            <div class="parking-slot available col-span-1 p-4 rounded-lg border border-gray-300 text-center cursor-pointer"
+                                data-slot="C3" data-type="ev">
+                                <div class="font-bold">C3</div>
+                                <div class="text-xs">EV Charging</div>
+                                <div class="text-green-600 text-sm mt-1">Available</div>
+                            </div>
+                            <div class="parking-slot booked col-span-1 p-4 rounded-lg border border-gray-300 text-center cursor-not-allowed"
+                                data-slot="C4" data-type="ev">
+                                <div class="font-bold">C4</div>
+                                <div class="text-xs">EV Charging</div>
+                                <div class="text-red-600 text-sm mt-1">Booked</div>
+                            </div>
+                            <div class="parking-slot available col-span-1 p-4 rounded-lg border border-gray-300 text-center cursor-pointer"
+                                data-slot="C5" data-type="large">
+                                <div class="font-bold">C5</div>
+                                <div class="text-xs">Large Vehicle</div>
+                                <div class="text-green-600 text-sm mt-1">Available</div>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-5 gap-4 mt-4">
+                            <div class="col-span-5 bg-gray-300 h-12 rounded flex items-center justify-center font-bold">
+                                EXIT
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl shadow-md p-6">
+                    <h2 class="text-2xl font-bold text-gray-800 mb-6">Parking Details</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <h3 class="text-lg font-semibold mb-3">Location Information</h3>
+                            <div class="space-y-2">
+                                <div class="flex items-start">
+                                    <i class="fas fa-map-marker-alt text-blue-500 mt-1 mr-3"></i>
+                                    <div>
+                                        <p class="font-medium">{{ parking_name }}</p>
+                                        <p class="text-gray-600 text-sm">{{ parking_address }}</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-start">
+                                    <i class="fas fa-clock text-blue-500 mt-1 mr-3"></i>
+                                    <div>
+                                        <p class="font-medium">Opening Hours</p>
+                                        <p class="text-gray-600 text-sm">Mon-Sun: 6:00 AM - 11:00 PM</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-start">
+                                    <i class="fas fa-info-circle text-blue-500 mt-1 mr-3"></i>
+                                    <div>
+                                        <p class="font-medium">Total Spaces</p>
+                                        <p class="text-gray-600 text-sm">150 (50 Standard, 50 Premium, 30 EV, 20
+                                            Disabled)</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-semibold mb-3">Amenities</h3>
+                            <div class="flex flex-wrap gap-2">
+                                <span
+                                    class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm flex items-center">
+                                    <i class="fas fa-bolt mr-1"></i> EV Charging
+                                </span>
+                                <span
+                                    class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm flex items-center">
+                                    <i class="fas fa-wheelchair mr-1"></i> Disabled Access
+                                </span>
+                                <span
+                                    class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm flex items-center">
+                                    <i class="fas fa-shield-alt mr-1"></i> Security
+                                </span>
+                                <span
+                                    class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm flex items-center">
+                                    <i class="fas fa-camera mr-1"></i> CCTV
+                                </span>
+                                <span
+                                    class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm flex items-center">
+                                    <i class="fas fa-restroom mr-1"></i> Restrooms
+                                </span>
+                            </div>
+
+                            <h3 class="text-lg font-semibold mt-4 mb-3">Pricing</h3>
+                            <div class="space-y-1">
+                                <div class="flex justify-between">
+                                    <span class="text-gray-600">Standard (first hour)</span>
+                                    <span class="font-medium">₹3.00</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-gray-600">Premium (first hour)</span>
+                                    <span class="font-medium">₹5.00</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-gray-600">Each additional hour</span>
+                                    <span class="font-medium">₹5.00</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-gray-600">Daily maximum</span>
+                                    <span class="font-medium">₹50.00</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Booking Section -->
+            <div class="lg:w-1/3">
+                <div class="bg-white rounded-xl shadow-md p-6 sticky top-6">
+                    <h2 class="text-2xl font-bold text-gray-800 mb-6">Booking Summary</h2>
+
+                    <div id="noSelection" class="bg-blue-50 border border-blue-200 rounded-lg p-4 text-center">
+                        <i class="fas fa-info-circle text-blue-500 text-2xl mb-2"></i>
+                        <p class="text-blue-800">Please select a parking slot from the map to proceed with your booking.
+                        </p>
+                    </div>
+
+                    <div id="bookingForm" class="hidden">
+                        <div class="bg-gray-100 rounded-lg p-4 mb-6">
+                            <div class="flex justify-between items-center mb-2">
+                                <h3 class="font-bold text-lg" id="selectedSlot">Slot: A1</h3>
+                                <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-xs"
+                                    id="slotType">Standard</span>
+                            </div>
+                            <p class="text-gray-600 text-sm mb-3">{{ parking_name }}</p>
+
+                            <div class="space-y-3">
+                                <div class="flex justify-between">
+                                    <span class="text-gray-600">Date</span>
+                                    <span class="font-medium" id="bookingDate">Today, Jun 15</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-gray-600">Time</span>
+                                    <span class="font-medium" id="bookingTime">2:00 PM - 4:00 PM</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-gray-600">Duration</span>
+                                    <span class="font-medium">2 hours</span>
+                                </div>
+                                <div class="flex justify-between border-t pt-2">
+                                    <span class="text-gray-600">Price</span>
+                                    <span class="font-bold text-blue-600" id="bookingPrice">₹6.00</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <h3 class="text-lg font-semibold mb-3">Booking Options</h3>
+                        <div class="space-y-4 mb-6">
+                            <div class="flex items-center">
+                                <input type="radio" id="realTime" name="bookingType" value="realTime"
+                                    class="h-4 w-4 text-blue-600 focus:ring-blue-500" checked>
+                                <label for="realTime" class="ml-2 block text-sm text-gray-900">
+                                    <span class="font-medium">Real-time Booking</span>
+                                    <span class="text-gray-500 block">Book now for immediate use</span>
+                                </label>
+                            </div>
+                            <div class="flex items-center">
+                                <input type="radio" id="advanced" name="bookingType" value="advanced"
+                                    class="h-4 w-4 text-blue-600 focus:ring-blue-500">
+                                <label for="advanced" class="ml-2 block text-sm text-gray-900">
+                                    <span class="font-medium">Advanced Booking</span>
+                                    <span class="text-gray-500 block">Reserve for future date/time</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div id="advancedOptions" class="hidden mb-6">
+                            <h3 class="text-lg font-semibold mb-3">Advanced Booking Details</h3>
+                            <div class="space-y-3">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Date</label>
+                                    <input type="date" class="w-full p-2 border rounded-lg">
+                                </div>
+                                <div class="grid grid-cols-2 gap-3">
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">From</label>
+                                        <input type="time" class="w-full p-2 border rounded-lg">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">To</label>
+                                        <input type="time" class="w-full p-2 border rounded-lg">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <h3 class="text-lg font-semibold mb-3">Payment Method</h3>
+                        <div class="space-y-3 mb-6">
+                            <div class="flex items-center p-3 border rounded-lg cursor-pointer hover:border-blue-500">
+                                <input type="radio" id="creditCard" name="paymentMethod" value="creditCard"
+                                    class="h-4 w-4 text-blue-600 focus:ring-blue-500" checked>
+                                <label for="creditCard" class="ml-2 block text-sm text-gray-900 w-full">
+                                    <div class="flex justify-between items-center">
+                                        <span>Credit/Debit Card</span>
+                                        <div class="flex space-x-2">
+                                            <i class="fab fa-cc-visa text-gray-500"></i>
+                                            <i class="fab fa-cc-mastercard text-gray-500"></i>
+                                            <i class="fab fa-cc-amex text-gray-500"></i>
+                                        </div>
+                                    </div>
+                                </label>
+                            </div>
+                            <div class="flex items-center p-3 border rounded-lg cursor-pointer hover:border-blue-500">
+                                <input type="radio" id="paypal" name="paymentMethod" value="paypal"
+                                    class="h-4 w-4 text-blue-600 focus:ring-blue-500">
+                                <label for="paypal" class="ml-2 block text-sm text-gray-900 w-full">
+                                    <div class="flex justify-between items-center">
+                                        <span>PayPal</span>
+                                        <i class="fab fa-cc-paypal text-gray-500"></i>
+                                    </div>
+                                </label>
+                            </div>
+                            <div class="flex items-center p-3 border rounded-lg cursor-pointer hover:border-blue-500">
+                                <input type="radio" id="wallet" name="paymentMethod" value="wallet"
+                                    class="h-4 w-4 text-blue-600 focus:ring-blue-500">
+                                <label for="wallet" class="ml-2 block text-sm text-gray-900 w-full">
+                                    <div class="flex justify-between items-center">
+                                        <span>ParkEase Wallet</span>
+                                <h3 class="font-bold text-lg" id="selectedSlot">Slot: A1</h3>
+                                <span class="text-blue-600 font-medium">₹25.00</span>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
+                            <h3 class="font-semibold text-blue-800 mb-2">Need to extend your parking?</h3>
+                            <p class="text-blue-700 text-sm">You can extend your parking time through the ParkEase app
+                                up to 30 minutes before your booking ends.</p>
+                        </div>
+
+                        <button id="confirmBooking"
+                            class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg transition flex items-center justify-center">
+                            <i class="fas fa-lock mr-2"></i> Confirm & Pay ₹6.00
+                        </button>
+
+                        <p class="text-gray-500 text-xs mt-3 text-center">By proceeding, you agree to our <a href="#"
+                                class="text-blue-600">Terms of Service</a> and <a href="#" class="text-blue-600">Privacy
+                                Policy</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Payment Modal -->
+    <div id="paymentModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+        <div class="bg-white rounded-xl shadow-xl w-full max-w-md">
+            <div class="p-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-xl font-bold text-gray-800">Confirm Payment</h3>
+                    <button id="closeModal" class="text-gray-500 hover:text-gray-700">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+
+                <div class="bg-gray-100 rounded-lg p-4 mb-6">
+                    <div class="flex justify-between mb-2">
+                        <span class="text-gray-600">Parking Slot</span>
+                        <span class="font-medium" id="modalSlot">A1 (Standard)</span>
+                    </div>
+                    <div class="flex justify-between mb-2">
+                        <span class="text-gray-600">Date & Time</span>
+                        <span class="font-medium" id="modalDateTime">Today, 2:00 PM - 4:00 PM</span>
+                    </div>
+                    <div class="flex justify-between border-t pt-2">
+                        <span class="text-gray-600">Total Amount</span>
+                        <span class="font-bold text-blue-600" id="modalAmount">₹6.00</span>
+                    </div>
+                </div>
+
+                <div id="creditCardForm" class="mb-6">
+                    <div class="space-y-3">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Card Number</label>
+                            <input type="text" placeholder="1234 5678 9012 3456" class="w-full p-3 border rounded-lg">
+                        </div>
+                        <div class="grid grid-cols-2 gap-3">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Expiry Date</label>
+                                <input type="text" placeholder="MM/YY" class="w-full p-3 border rounded-lg">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">CVV</label>
+                                <input type="text" placeholder="123" class="w-full p-3 border rounded-lg">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Name on Card</label>
+                            <input type="text" placeholder="John Doe" class="w-full p-3 border rounded-lg">
+                        </div>
+                    </div>
+                </div>
+
+                <button id="processPayment"
+                    class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg transition flex items-center justify-center">
+                    <i class="fas fa-spinner fa-spin mr-2 hidden"></i>
+                    <span>Complete Payment</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success Modal -->
+    <form action="{{ url_for('book_slot') }}" method="POST">
+        <!-- Hidden Inputs -->
+        <input type="hidden" name="parking_id" value="{{ selected_parking_id }}">
+        <input type="hidden" name="slot_no" value="{{ selected_slot_no }}">
+      
+        <!-- Booking Modal (still hidden initially) -->
+        <div id="successModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+          <div class="bg-white rounded-xl shadow-xl w-full max-w-md p-8 text-center">
+            <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <i class="fas fa-check text-green-500 text-2xl"></i>
+            </div>
+            <h3 class="text-xl font-bold text-gray-800 mb-2">Booking Confirmed!</h3>
+            <p class="text-gray-600 mb-6">Your parking slot has been successfully booked.</p>
+      
+            <div class="bg-gray-100 rounded-lg p-4 mb-6">
+              <div class="flex justify-between mb-2">
+                <span class="text-gray-600">Booking ID</span>
+                <span class="font-medium">PKG-789456</span>
+              </div>
+              <div class="flex justify-between mb-2">
+                <span class="text-gray-600">Parking Slot</span>
+                <span class="font-medium">A1 (Standard)</span>
+              </div>
+              <div class="flex justify-between mb-2">
+                <span class="text-gray-600">Date & Time</span>
+                <span class="font-medium">Today, 2:00 PM - 4:00 PM</span>
+              </div>
+              <div class="flex justify-between border-t pt-2">
+                <span class="text-gray-600">Amount Paid</span>
+                <span class="font-bold text-green-600">₹6.00</span>
+              </div>
+            </div>
+      
+            <!-- Buttons -->
+            <div class="flex space-x-3">
+              <button type="submit"
+                class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg transition">
+                Confirm Booking
+              </button>
+              <button id="closeSuccessModal"
+                class="flex-1 bg-white border border-gray-300 hover:bg-gray-50 text-gray-800 font-bold py-3 px-4 rounded-lg transition" type="button">
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      </form>
+      
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-12">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <h3 class="text-xl font-bold mb-4 flex items-center">
+                        <i class="fas fa-parking mr-2"></i> Find-A-Spot
+                    </h3>
+                    <p class="text-gray-400">Smart parking solutions for commercial and private parking lots.</p>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-4">Quick Links</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-white">Home</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">Find Parking</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">Pricing</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">About Us</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-4">Support</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-white">Help Center</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">Contact Us</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">FAQs</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">Privacy Policy</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-4">Download App</h4>
+                    <div class="space-y-3">
+                        <button
+                            class="w-full bg-black text-white py-2 px-4 rounded-lg flex items-center justify-center">
+                            <i class="fab fa-apple mr-2"></i> App Store
+                        </button>
+                        <button
+                            class="w-full bg-black text-white py-2 px-4 rounded-lg flex items-center justify-center">
+                            <i class="fab fa-google-play mr-2"></i> Google Play
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400">
+                <p>&copy; 2025 Find-A-Spot. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Get current date and time
+            const now = new Date();
+            const options = { weekday: 'long', year: 'numeric', month: 'short', day: 'numeric' };
+            document.getElementById('bookingDate').textContent = now.toLocaleDateString('en-US', options);
+
+            // Set default time (current hour + 1 to next hour)
+            const nextHour = new Date(now.getTime() + 60 * 60 * 1000);
+            const startTime = `${now.getHours()}:${now.getMinutes().toString().padStart(2, '0')}`;
+            const endTime = `${nextHour.getHours()}:${nextHour.getMinutes().toString().padStart(2, '0')}`;
+            document.getElementById('bookingTime').textContent = `${startTime} - ${endTime}`;
+
+            // Parking slot selection
+            const parkingSlots = document.querySelectorAll('.parking-slot.available');
+            const noSelectionDiv = document.getElementById('noSelection');
+            const bookingFormDiv = document.getElementById('bookingForm');
+
+            parkingSlots.forEach(slot => {
+                slot.addEventListener('click', function () {
+                    // Remove selected class from all slots
+                    document.querySelectorAll('.parking-slot').forEach(s => {
+                        s.classList.remove('selected');
+                    });
+
+                    // Add selected class to clicked slot
+                    this.classList.add('selected');
+
+                    // Update booking form
+                    const slotId = this.getAttribute('data-slot');
+                    const slotType = this.getAttribute('data-type');
+
+                    document.getElementById('selectedSlot').textContent = `Slot: ${slotId}`;
+                    document.getElementById('slotType').textContent = slotType.charAt(0).toUpperCase() + slotType.slice(1);
+
+                    // Calculate price based on slot type
+                    let price = 6.00; // Default for standard
+                    if (slotType === 'premium') price = 10.00;
+                    if (slotType === 'disabled') price = 3.00;
+                    if (slotType === 'ev') price = 8.00;
+                    if (slotType === 'large') price = 12.00;
+
+                    document.getElementById('bookingPrice').textContent = `₹${price.toFixed(2)}`;
+
+                    // Show booking form
+                    noSelectionDiv.classList.add('hidden');
+                    bookingFormDiv.classList.remove('hidden');
+                });
+            });
+
+            // Booking type toggle
+            const realTimeRadio = document.getElementById('realTime');
+            const advancedRadio = document.getElementById('advanced');
+            const advancedOptions = document.getElementById('advancedOptions');
+
+            realTimeRadio.addEventListener('change', function () {
+                if (this.checked) {
+                    advancedOptions.classList.add('hidden');
+                }
+            });
+
+            advancedRadio.addEventListener('change', function () {
+                if (this.checked) {
+                    advancedOptions.classList.remove('hidden');
+                }
+            });
+
+            // Payment method toggle
+            const paymentMethods = document.querySelectorAll('input[name="paymentMethod"]');
+            const creditCardForm = document.getElementById('creditCardForm');
+
+            paymentMethods.forEach(method => {
+                method.addEventListener('change', function () {
+                    if (this.value === 'creditCard') {
+                        creditCardForm.classList.remove('hidden');
+                    } else {
+                        creditCardForm.classList.add('hidden');
+                    }
+                });
+            });
+
+            // Modal handling
+            const paymentModal = document.getElementById('paymentModal');
+            const successModal = document.getElementById('successModal');
+            const confirmBookingBtn = document.getElementById('confirmBooking');
+            const closeModalBtn = document.getElementById('closeModal');
+            const processPaymentBtn = document.getElementById('processPayment');
+            const closeSuccessModalBtn = document.getElementById('closeSuccessModal');
+            const viewBookingBtn = document.getElementById('viewBooking');
+
+            confirmBookingBtn.addEventListener('click', function () {
+                // Update modal content
+                document.getElementById('modalSlot').textContent =
+                    `${document.getElementById('selectedSlot').textContent.replace('Slot: ', '')} (${document.getElementById('slotType').textContent})`;
+                document.getElementById('modalDateTime').textContent =
+                    `${document.getElementById('bookingDate').textContent}, ${document.getElementById('bookingTime').textContent}`;
+                document.getElementById('modalAmount').textContent =
+                    document.getElementById('bookingPrice').textContent;
+
+                // Show modal
+                paymentModal.classList.remove('hidden');
+            });
+
+            closeModalBtn.addEventListener('click', function () {
+                paymentModal.classList.add('hidden');
+            });
+
+            processPaymentBtn.addEventListener('click', function () {
+                const spinner = this.querySelector('.fa-spinner');
+                const text = this.querySelector('span');
+
+                // Show spinner
+                spinner.classList.remove('hidden');
+                text.textContent = 'Processing...';
+
+                // Simulate payment processing
+                setTimeout(() => {
+                    // Hide payment modal
+                    paymentModal.classList.add('hidden');
+
+                    // Show success modal
+                    successModal.classList.remove('hidden');
+
+                    // Reset button
+                    spinner.classList.add('hidden');
+                    text.textContent = 'Complete Payment';
+                }, 2000);
+            });
+
+            closeSuccessModalBtn.addEventListener('click', function () {
+                successModal.classList.add('hidden');
+            });
+
+            viewBookingBtn.addEventListener('click', function () {
+    successModal.classList.add('hidden');
+    // Redirect to the booking details page
+    window.location.href = '/show_booking_details';
+});
+
+
+            // Close modals when clicking outside
+            window.addEventListener('click', function (event) {
+                if (event.target === paymentModal) {
+                    paymentModal.classList.add('hidden');
+                }
+                if (event.target === successModal) {
+                    successModal.classList.add('hidden');
+                }
+            });
+
+            // Update last updated time every minute
+            setInterval(() => {
+                const now = new Date();
+                const timeString = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+                document.getElementById('lastUpdated').textContent = `Today, ${timeString}`;
+            }, 60000);
+        });
+    </script>
+</body>
+
+</html>

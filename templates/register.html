@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Register - Find-A-Spot</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    .animate-float {
+      animation: float 6s ease-in-out infinite;
+    }
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-20px); }
+    }
+    .profile-upload:hover .upload-icon {
+      transform: scale(1.1);
+      color: #3b82f6;
+    }
+  </style>
+</head>
+<body class="bg-gradient-to-br from-blue-50 to-cyan-100 min-h-screen py-10 px-4">
+
+  <!-- Floating decorative elements -->
+  <div class="fixed top-20 left-10 w-16 h-16 bg-blue-200 rounded-full opacity-20 animate-float"></div>
+  <div class="fixed bottom-20 right-10 w-24 h-24 bg-teal-200 rounded-full opacity-20 animate-float animation-delay-2000"></div>
+
+  <div class="max-w-4xl mx-auto bg-white rounded-2xl shadow-xl overflow-hidden">
+    <!-- Decorative header -->
+    <div class="bg-gradient-to-r from-blue-600 to-cyan-500 py-4 px-8">
+      <h2 class="text-3xl font-bold text-center text-white">Join Find-A-Spot</h2>
+      <p class="text-center text-blue-100 mt-1">Create your account in just a minute</p>
+    </div>
+
+    <form action="/register" method="POST" enctype="multipart/form-data" class="grid grid-cols-1 md:grid-cols-2 gap-6 p-8">
+     <!-- Profile Picture Upload -->
+  <div class="col-span-1 md:col-span-2 flex flex-col items-center">
+    <div class="w-32 h-32 rounded-full bg-gray-200 flex items-center justify-center relative shadow-md overflow-hidden">
+      <img id="imagePreview" class="hidden w-full h-full object-cover" src="#" alt="Preview">
+      <i id="uploadIcon" class="fas fa-user text-5xl text-gray-400"></i>
+      <input type="file" name="profile_image" id="profileImage" accept="image/*" 
+             class="absolute w-full h-full opacity-0 cursor-pointer">
+    </div>
+    <p class="mt-2 text-blue-600 font-medium text-sm">
+      <i class="fas fa-upload mr-1"></i> Upload Profile Picture
+    </p>
+  </div>
+
+      <!-- Personal Information Section -->
+      <div class="md:col-span-2">
+        <h3 class="text-xl font-semibold text-gray-800 mb-4 flex items-center">
+          <span class="w-4 h-4 bg-blue-500 rounded-full mr-2"></span>
+          Personal Information
+        </h3>
+      </div>
+
+      <!-- Full Name -->
+      <div class="relative">
+        <label class="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
+        <div class="flex items-center border-2 rounded-lg px-3 py-2 focus-within:border-blue-500 transition">
+          <i class="fas fa-user text-gray-400 mr-2"></i>
+          <input type="text" name="name" class="w-full focus:outline-none bg-transparent" placeholder="John Doe" required>
+        </div>
+      </div>
+
+      <!-- Phone Number -->
+      <div class="relative">
+        <label class="block text-sm font-medium text-gray-700 mb-1">Phone Number</label>
+        <div class="flex items-center border-2 rounded-lg px-3 py-2 focus-within:border-blue-500 transition">
+          <i class="fas fa-phone text-gray-400 mr-2"></i>
+          <input type="tel" name="phone_no" class="w-full focus:outline-none bg-transparent" placeholder="+91 9876543210" required>
+        </div>
+      </div>
+
+      <!-- Vehicle Information Section -->
+      <div class="md:col-span-2">
+        <h3 class="text-xl font-semibold text-gray-800 mb-4 flex items-center">
+          <span class="w-4 h-4 bg-blue-500 rounded-full mr-2"></span>
+          Vehicle Information
+        </h3>
+      </div>
+
+      <!-- Vehicle Number -->
+      <div class="relative">
+        <label class="block text-sm font-medium text-gray-700 mb-1">Vehicle Number</label>
+        <div class="flex items-center border-2 rounded-lg px-3 py-2 focus-within:border-blue-500 transition">
+          <i class="fas fa-car text-gray-400 mr-2"></i>
+          <input type="text" name="vehicle_no" class="w-full focus:outline-none bg-transparent uppercase" placeholder="MP09AB1234" required>
+        </div>
+      </div>
+
+      <!-- Age -->
+      <div class="relative">
+        <label class="block text-sm font-medium text-gray-700 mb-1">Age</label>
+        <div class="flex items-center border-2 rounded-lg px-3 py-2 focus-within:border-blue-500 transition">
+          <i class="fas fa-user-clock text-gray-400 mr-2"></i>
+          <input type="number" name="age" min="18" max="100" class="w-full focus:outline-none bg-transparent" placeholder="30" required>
+        </div>
+      </div>
+
+      <!-- Location Information Section -->
+      <div class="md:col-span-2">
+        <h3 class="text-xl font-semibold text-gray-800 mb-4 flex items-center">
+          <span class="w-4 h-4 bg-blue-500 rounded-full mr-2"></span>
+          Location Information
+        </h3>
+      </div>
+
+      <!-- Gender -->
+      <div class="relative">
+        <label class="block text-sm font-medium text-gray-700 mb-1">Gender</label>
+        <div class="flex items-center border-2 rounded-lg px-3 py-2 focus-within:border-blue-500 transition">
+          <i class="fas fa-venus-mars text-gray-400 mr-2"></i>
+          <select name="gender" class="w-full focus:outline-none bg-transparent">
+            <option value="">-- Select Gender --</option>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- City -->
+      <div class="relative">
+        <label class="block text-sm font-medium text-gray-700 mb-1">City</label>
+        <div class="flex items-center border-2 rounded-lg px-3 py-2 focus-within:border-blue-500 transition">
+          <i class="fas fa-city text-gray-400 mr-2"></i>
+          <input type="text" name="city" class="w-full focus:outline-none bg-transparent" placeholder="Indore">
+        </div>
+      </div>
+
+      <!-- State -->
+      <div class="relative">
+        <label class="block text-sm font-medium text-gray-700 mb-1">State</label>
+        <div class="flex items-center border-2 rounded-lg px-3 py-2 focus-within:border-blue-500 transition">
+          <i class="fas fa-map-marker-alt text-gray-400 mr-2"></i>
+          <input type="text" name="state" class="w-full focus:outline-none bg-transparent" placeholder="Madhya Pradesh">
+        </div>
+      </div>
+
+      <!-- Address -->
+      <div class="md:col-span-2 relative">
+        <label class="block text-sm font-medium text-gray-700 mb-1">Address</label>
+        <div class="flex items-center border-2 rounded-lg px-3 py-2 focus-within:border-blue-500 transition">
+          <i class="fas fa-home text-gray-400 mr-2 self-start mt-1"></i>
+          <textarea name="address" rows="2" class="w-full focus:outline-none bg-transparent" placeholder="123 Park Avenue, Indore, MP, India"></textarea>
+        </div>
+      </div>
+
+      <!-- Account Information Section -->
+      <div class="md:col-span-2">
+        <h3 class="text-xl font-semibold text-gray-800 mb-4 flex items-center">
+          <span class="w-4 h-4 bg-blue-500 rounded-full mr-2"></span>
+          Account Information
+        </h3>
+      </div>
+
+      <!-- Email -->
+      <div class="md:col-span-1 relative">
+        <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+        <div class="flex items-center border-2 rounded-lg px-3 py-2 focus-within:border-blue-500 transition">
+          <i class="fas fa-envelope text-gray-400 mr-2"></i>
+          <input type="email" name="email" class="w-full focus:outline-none bg-transparent" placeholder="you@example.com" required>
+        </div>
+      </div>
+
+      <!-- Password -->
+      <div class="md:col-span-1 relative">
+        <label class="block text-sm font-medium text-gray-700 mb-1">Password</label>
+        <div class="flex items-center border-2 rounded-lg px-3 py-2 focus-within:border-blue-500 transition">
+          <i class="fas fa-lock text-gray-400 mr-2"></i>
+          <input type="password" name="password" class="w-full focus:outline-none bg-transparent" placeholder="********" required>
+          <i class="fas fa-eye text-gray-400 ml-2 cursor-pointer" onclick="togglePassword(this)"></i>
+        </div>
+      </div>
+
+      <!-- Role -->
+      <div class="md:col-span-2 relative">
+        <label class="block text-sm font-medium text-gray-700 mb-1">Register As</label>
+        <div class="flex items-center border-2 rounded-lg px-3 py-2 focus-within:border-blue-500 transition">
+          <i class="fas fa-user-tag text-gray-400 mr-2"></i>
+          <select name="role" class="w-full focus:outline-none bg-transparent">
+            <option value="customer">Customer</option>
+            <option value="admin">Admin</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Submit Button -->
+      <div class="md:col-span-2 mt-6">
+        <button type="submit" class="w-full py-3 bg-gradient-to-r from-blue-600 to-cyan-500 text-white font-bold rounded-lg hover:from-blue-700 hover:to-cyan-600 transition-all shadow-lg flex items-center justify-center">
+          <i class="fas fa-user-plus mr-2"></i> Create Account
+        </button>
+      </div>
+
+      <div class="md:col-span-2 text-center text-sm text-gray-500 mt-4">
+        Already have an account? 
+        <a href="/login" class="text-blue-600 hover:text-blue-800 font-medium">Sign in here</a>
+      </div>
+    </form>
+  </div>
+
+  <script>
+  // Image preview functionality
+  document.getElementById('profileImage').addEventListener('change', function(e) {
+    const preview = document.getElementById('imagePreview');
+    const icon = document.getElementById('uploadIcon');
+    const file = e.target.files[0];
+    
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        preview.src = e.target.result;
+        preview.classList.remove('hidden');
+        icon.classList.add('hidden');
+      }
+      reader.readAsDataURL(file);
+    }
+  });
+
+    // Toggle password visibility
+    function togglePassword(icon) {
+      const input = icon.previousElementSibling;
+      if (input.type === 'password') {
+        input.type = 'text';
+        icon.classList.remove('fa-eye');
+        icon.classList.add('fa-eye-slash');
+      } else {
+        input.type = 'password';
+        icon.classList.remove('fa-eye-slash');
+        icon.classList.add('fa-eye');
+      }
+    }
+  </script>
+</body>
+</html>

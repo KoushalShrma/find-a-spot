@@ -1,0 +1,20 @@
+<!-- save as templates/navbar.html -->
+<header class="bg-gradient-to-r from-blue-600 to-teal-600 text-white py-4 shadow-md fixed top-0 w-full z-50">
+    <div class="container mx-auto px-4 flex justify-between items-center">
+      <h1 class="text-xl font-bold">Find-A-Spot</h1>
+      <nav class="space-x-6 hidden md:flex">
+        <a href="{{ url_for('home') }}" class="hover:text-blue-200">Home</a>
+        <a href="{{ url_for('about') }}"  class="hover:text-blue-200">About</a>
+        <a href="{{ url_for('services') }}" class="hover:text-blue-200">Services</a>
+        <a href="{{ url_for('support') }}" class="hover:text-blue-200">Contact</a>
+        {% if session.get('user') %}
+          <a href="{{ url_for('logout') }}" class="hover:text-blue-200">Logout</a>
+        {% else %}
+          <a href="{{ url_for('login') }}" class="hover:text-blue-200">Login</a>
+          <a href="{{ url_for('register') }}" class="hover:text-blue-200">Register</a>
+        {% endif %}
+      </nav>
+      <!-- Hamburger menu for small screens can be added here -->
+    </div>
+  </header>
+  
